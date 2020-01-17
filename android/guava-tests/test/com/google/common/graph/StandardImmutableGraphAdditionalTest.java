@@ -22,9 +22,12 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.JUnit4;
 
-/** Tests for {@link ImmutableGraph}. */
+/**
+ * Tests for {@link ImmutableGraph} and {@link ImmutableGraph.Builder} that are not ready covered by
+ * {@link StandardImmutableDirectedGraphTest}.
+ */
 @RunWith(JUnit4.class)
-public class ImmutableGraphTest {
+public class StandardImmutableGraphAdditionalTest {
 
   @Test
   public void immutableGraph() {
@@ -81,6 +84,22 @@ public class ImmutableGraphTest {
     assertThat(emptyGraph.isDirected()).isTrue();
     assertThat(emptyGraph.allowsSelfLoops()).isTrue();
     assertThat(emptyGraph.nodeOrder()).isEqualTo(ElementOrder.<String>natural());
+  }
+
+  @Test
+  public void copyOf_incidentEdgeOrder() {
+    ImmutableGraph<Object> graph = ImmutableGraph.copyOf(GraphBuilder.undirected().build());
+
+    assertThat(graph.incidentEdgeOrder()).isEqualTo(ElementOrder.stable());
+  }
+
+  @Test
+  public void copyOf_fromUnorderedGraph_incidentEdgeOrder() {
+    ImmutableGraph<Object> graph =
+        ImmutableGraph.copyOf(
+            GraphBuilder.undirected().incidentEdgeOrder(ElementOrder.unordered()).build());
+
+    assertThat(graph.incidentEdgeOrder()).isEqualTo(ElementOrder.stable());
   }
 
   @Test
